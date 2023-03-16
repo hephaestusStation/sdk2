@@ -1,0 +1,74 @@
+.. Jaxon Python API Reference documentation.
+   Include modules after toctree, in order. We are using the `napoleon`
+   extension to give us google, numpy style of docstring. The style can
+   be further tweaked by applying the available config in conf.py. Will
+   use this if needed -- end comment.
+
+
+Jaxon Python API Reference
+==========================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+Client
+------
+
+.. automodule:: jaxon_client.client 
+   :members:
+   :special-members: __init__
+   :show-inheritance:
+
+Models
+------
+
+Project & Problem Specification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: jaxon_client.model.project
+   :members:
+   :show-inheritance:
+
+Datasets & Smart Split
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: jaxon_client.model.dataset
+   :members:
+   :show-inheritance:
+
+Classical Models
+~~~~~~~~~~~~~~~~
+
+.. automodule:: jaxon_client.model.classical
+   :members:
+   :show-inheritance:
+
+Neural Models
+~~~~~~~~~~~~~
+
+.. automodule:: jaxon_client.model.neural
+   :members:
+   :show-inheritance:
+
+Heuristics
+~~~~~~~~~~
+
+.. automodule:: jaxon_client.model.heuristic
+   :members:
+   :show-inheritance:
+
+
+Ensembles
+~~~~~~~~~
+
+.. automodule:: jaxon_client.model.ensemble
+   :members:
+   :show-inheritance:
+
+Job
+~~~~~~~~~
+
+.. automodule:: jaxon_client.model.job
+   :members:
+   :show-inheritance:
