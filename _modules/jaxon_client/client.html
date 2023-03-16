@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaxon_client.client &mdash; Jaxon Python API Reference 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/autodoc_pydantic.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/js/prevent_collapse.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Jaxon Python API Reference
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Jaxon Python API Reference</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">jaxon_client.client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for jaxon_client.client</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">AugmentSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ClassicalModel</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ClassicalModelService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ClassicalModelSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ClientConfig</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ClientUtils</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">CopySpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">DatasetService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">DatasetSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">DownloadFileType</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Ensemble</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">EnsembleService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">EnsembleSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Heuristic</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">HeuristicService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Job</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">JobService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">LabelDatasetSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">MergeSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">NeuralModel</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">NeuralModelService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">NeuralModelSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Project</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">ProjectService</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Result</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">Spec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">SplitSpec</span>
+<span class="kn">from</span> <span class="nn">jaxon_client</span> <span class="kn">import</span> <span class="n">TaskType</span>
+
+
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client">[docs]</a><span class="nd">@ClientUtils</span><span class="o">.</span><span class="n">class_error_handler</span>
+<span class="k">class</span> <span class="nc">Client</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client</span>
+
+<span class="sd">    The client contains information for connecting to a running Jaxon service</span>
+<span class="sd">    It provides functions for creating projects, datasets and running various</span>
+<span class="sd">    workflows on imported datasets such as labeling, training models. The</span>
+<span class="sd">    models and the curated datasets can be exported via this client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Client.__init__"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">client_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">client_secret</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the JaxonClient to access the Jaxon server.</span>
+
+<span class="sd">        To successfully create a client a valid base_url must be provided.</span>
+
+<span class="sd">        &gt;&gt;&gt; import jaxon_client as jc</span>
+<span class="sd">        &gt;&gt;&gt; client = jc.Client(base_url=&quot;http://localhost:31415&quot;, client_id=&quot;user_name&quot;, client_secret=&quot;password&quot;)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            base_url (str): the base URL to a running Jaxon service.</span>
+<span class="sd">            client_id (str): the id to authenticate.</span>
+<span class="sd">            client_secret (str): the secret for the id to authenticate</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span> <span class="o">=</span> <span class="n">ClientConfig</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">client_id</span><span class="p">,</span> <span class="n">client_secret</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span> <span class="o">=</span> <span class="n">ProjectService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span> <span class="o">=</span> <span class="n">DatasetService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_classical_model_service</span> <span class="o">=</span> <span class="n">ClassicalModelService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_heuristic_service</span> <span class="o">=</span> <span class="n">HeuristicService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span> <span class="o">=</span> <span class="n">EnsembleService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span> <span class="o">=</span> <span class="n">NeuralModelService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_job_service</span> <span class="o">=</span> <span class="n">JobService</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client_config</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_project"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_project">[docs]</a>    <span class="k">def</span> <span class="nf">get_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Project</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the Project by its project id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): The project_id (assigned when project was created).</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result - result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Project object - contains the resource metadata.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; result, project = client.get_project(project_id)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...    print(project)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_projects"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_projects">[docs]</a>    <span class="k">def</span> <span class="nf">list_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Project</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of Project objects.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            none required</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result - result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List of Project objects.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, projects = client.list_projects()</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     for project in projects:</span>
+<span class="sd">            ...         print(project)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">list</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Client.create_project"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.create_project">[docs]</a>    <span class="k">def</span> <span class="nf">create_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Project</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a Project object on Jaxon.</span>
+
+<span class="sd">        Creates a new project on the server with given name, and description.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): name of the project.</span>
+<span class="sd">            description (str): a short description of the project.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result - result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Project object - contains project resources.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, project = client.create_project(name=&quot;project name&quot;, </span>
+<span class="sd">            &gt;&gt;&gt;                                         description=&quot;project description&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     print(project)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_project"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.delete_project">[docs]</a>    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes the project.</span>
+
+<span class="sd">        Given project and all its assets are permanently deleted from the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project to be deleted from the server.</span>
+<span class="sd">        Return:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result = client.delete_project(project_id)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     print(&quot;Project and all its assets successfully deleted&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dataset</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the Dataset from server.</span>
+
+<span class="sd">        The requested Dataset is retrieved from the server</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">            dataset_id (str): UUID of the dataset to be retrieved from the server.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, dataset = client.get_dataset(project_id, dataset_id)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     print(dataset)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_datasets"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_datasets">[docs]</a>    <span class="k">def</span> <span class="nf">list_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dataset</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves  List of Datasets in the given project.</span>
+
+<span class="sd">        Retrieves a list of Datasets, in given project.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List of Datasets in the project.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, datasets = client.get_datasets(project_id)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     for datasets in datasets:</span>
+<span class="sd">            ...     print(dataset)</span>
+<span class="sd">            ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.upload_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.upload_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">upload_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_spec</span><span class="p">:</span> <span class="n">DatasetSpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dataset</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uploads the dataset to an existing project on the server.</span>
+
+<span class="sd">        To upload a dataset a DatasetSpec, describing the dataset is passed in.</span>
+<span class="sd">        The DatasetSpec provides a schema with feature-role and label role to be</span>
+<span class="sd">        applied to named columns.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dataset_spec (DatasetSpec): provides dataset schema and path to the dataset.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Dataset: the newly created dataset object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; ds_spec = ClientUtils.dataset_spec(dataset_name,</span>
+<span class="sd">                                                   project_id,</span>
+<span class="sd">                                                   file_path,</span>
+<span class="sd">                                                   headers=features,</span>
+<span class="sd">                                                   file_type=FileType.csv)</span>
+<span class="sd">            ...</span>
+<span class="sd">            &gt;&gt;&gt; result, dataset = client.upload_dataset(ds_spec)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure():</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">upload_dataset</span><span class="p">(</span><span class="n">dataset_spec</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.delete_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">delete_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes the Dataset from given project on the server.</span>
+
+<span class="sd">        The Dataset, and all models trained with this dataset are permanently removed from the database.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">            dataset_id (str): UUID of the dataset to be deleted from the project.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.split_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.split_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">split_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">split_dataset_spec</span><span class="p">:</span> <span class="n">SplitSpec</span><span class="p">,</span>
+                      <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Splits the given Dataset.</span>
+
+<span class="sd">        The given dataset is split based on ratio provided in the SplitSpec.</span>
+<span class="sd">        The SplitSpec also specifies name, and description of the split components.</span>
+
+<span class="sd">        The split dataset components can be retrieved with client.find_datasets().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            split_dataset_spec (SplitSpec): split details including ratio.</span>
+<span class="sd">            max_wait_time (int): max wait time in seconds, if zero the call is treated as non-blocking.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            job (Optional[Job]): used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; split_spec = ClientUtils.split_spec(project_id,</span>
+<span class="sd">                                                    dataset_id,</span>
+<span class="sd">                                                    training_dataset_name=&quot;train&quot;,</span>
+<span class="sd">                                                    test_dataset_name=&quot;test&quot;,</span>
+<span class="sd">                                                    split_ratio=SplitRatio(pct_labeled_examples=80,</span>
+<span class="sd">                                                                           pct_unlabeled_examples=100)</span>
+<span class="sd">                                                    )</span>
+<span class="sd">            &gt;&gt;&gt; result, job = client.split_dataset(split_spec, max_wait_time=6000)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt; else:</span>
+<span class="sd">            ...     print(&quot;Dataset split successful&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">split_dataset</span><span class="p">(</span><span class="n">split_dataset_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_train_classical_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_spec</span><span class="p">:</span> <span class="n">ClassicalModelSpec</span><span class="p">,</span>
+                               <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model_spec (ClassicalModelSpec):</span>
+<span class="sd">            max_wait_time (int):</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classical_model_service</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Client.get_classical_model"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_classical_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_classical_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ClassicalModel</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves classical model.</span>
+
+<span class="sd">        Given a model_id retrieve the model from server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project containing the model resource.</span>
+<span class="sd">            model_id (str):</span>
+
+<span class="sd">        Returns:</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classical_model_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.generate_heuristic"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.generate_heuristic">[docs]</a>    <span class="k">def</span> <span class="nf">generate_heuristic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates heuristic.</span>
+
+<span class="sd">        Generates heuristic for a given dataset. The heuristic is a regular-expression used to match a label.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            dataset_id: UUID of dataset to work with.</span>
+<span class="sd">            ensemble_id: optional.</span>
+<span class="sd">            max_wait_time: optional, max wait time in seconds, if zero the call is treated as non-blocking.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heuristic_service</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span>
+                                                <span class="n">dataset_id</span><span class="o">=</span><span class="n">dataset_id</span><span class="p">,</span>
+                                                <span class="n">ensemble_id</span><span class="o">=</span><span class="n">ensemble_id</span><span class="p">,</span>
+                                                <span class="n">max_wait_time</span><span class="o">=</span><span class="n">max_wait_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_heuristics"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_heuristics">[docs]</a>    <span class="k">def</span> <span class="nf">list_heuristics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Heuristic</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves list of heuristic.</span>
+
+<span class="sd">        Retrieves list of heuristic from the server for a given project</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List of Heuristic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heuristic_service</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_heuristic"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_heuristic">[docs]</a>    <span class="k">def</span> <span class="nf">get_heuristic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">heuristic_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Heuristic</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a Heuristic.</span>
+
+<span class="sd">        Retrieves a heuristic from the server given its heuristic_id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            heuristic_id: UUID of the heuristic.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Heuristic: a heuristic object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heuristic_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="o">=</span><span class="n">project_id</span><span class="p">,</span> <span class="n">heuristic_id</span><span class="o">=</span><span class="n">heuristic_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_heuristic"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.delete_heuristic">[docs]</a>    <span class="k">def</span> <span class="nf">delete_heuristic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">heuristic_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes the Heuristic on server.</span>
+
+<span class="sd">        Deletes the given heuristic from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            heuristic_id: UUID of the heuristic.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_heuristic_service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">heuristic_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.create_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.create_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">create_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create_ensemble_spec</span><span class="p">:</span> <span class="n">EnsembleSpec</span><span class="p">,</span>
+                        <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an ensemble from a given set of models.</span>
+
+<span class="sd">        Creates an ensemble from a given set of models, these include classical, neural, and heuristic.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            create_ensemble_spec (EnsembleSpec): provides a list of models.</span>
+<span class="sd">            max_wait_time: optional, max wait time in seconds, if zero the call is treated as non-blocking.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">create_ensemble_spec</span><span class="o">=</span><span class="n">create_ensemble_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="o">=</span><span class="n">max_wait_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">list_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Ensemble</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of Ensembles from the Server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List of Ensemble: list of ensemble object, None if list is empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">get_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Ensemble</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves an Ensemble.</span>
+
+<span class="sd">        Retrieves a given Ensemble for a given project.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            ensemble_id: UUID of the Ensemble</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Ensemble: the ensemble object, None if one note found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.delete_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">delete_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes an Ensemble.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            ensemble_id: UUID of the ensemble.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_train_neural_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_spec</span><span class="p">:</span> <span class="n">NeuralModelSpec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains neural-model</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model_spec:</span>
+<span class="sd">            max_wait_time:</span>
+<span class="sd">        Returns:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">create_model_spec</span><span class="o">=</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="o">=</span><span class="n">max_wait_time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Client.get_neural_model"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_neural_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_neural_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NeuralModel</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves Neural Model</span>
+
+<span class="sd">        Retrieves a given Neural model from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            model_id: UUID of the neural-model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            NeuralModel: the neural model object if one is found otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_neural_model"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.delete_neural_model">[docs]</a>    <span class="k">def</span> <span class="nf">delete_neural_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes the NeuralModel</span>
+
+<span class="sd">        Deletes the given NeuralModel from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id: UUID of the project.</span>
+<span class="sd">            model_id: the neural-model id.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.populate_project_spec"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.populate_project_spec">[docs]</a>    <span class="k">def</span> <span class="nf">populate_project_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">Spec</span><span class="p">,</span>
+                              <span class="n">labels_source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">],</span>
+                              <span class="n">spec_task_type</span><span class="p">:</span> <span class="n">TaskType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Spec</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Populates the Problem Spec</span>
+
+<span class="sd">        Populates the problem-spec with the unique list of classes and sets the task-type to be single or multi-label problem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            spec (Spec): the spec</span>
+<span class="sd">            labels_source (Union[List[str], str]:</span>
+<span class="sd">            spec_task_type (TaskType):</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Spec: the newly created spec.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; spec = project.spec</span>
+<span class="sd">            &gt;&gt;&gt; result, spec = client.populate_project_spec(spec,</span>
+<span class="sd">                                                            labels_source=dataset.id,</span>
+<span class="sd">                                                            spec_task_type=TaskType.SINGLE_LABEL)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt; else:</span>
+<span class="sd">            ...     print(&quot;Problem-spec: Successfully populated.&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_is_valid_labels_source_type</span><span class="p">(</span><span class="n">labels_source</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">populate_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">labels_source</span><span class="p">,</span> <span class="n">spec_task_type</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown labels_source type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">labels_source</span><span class="p">)</span><span class="si">}</span><span class="s2"> expecting type List[str] or str&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.lock_project_spec"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.lock_project_spec">[docs]</a>    <span class="k">def</span> <span class="nf">lock_project_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">spec</span><span class="p">:</span> <span class="n">Spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Spec</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Locks the Problem Spec.</span>
+
+<span class="sd">        Locks the problem-spec that was previously populated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           spec (Spec): the Spec object to be locked.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Spec: the Spec object after it&#39;s locked.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, spec = client.lock_project_spec(spec)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_project_service</span><span class="o">.</span><span class="n">lock_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.train_model"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.train_model">[docs]</a>    <span class="k">def</span> <span class="nf">train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">model_spec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ClassicalModelSpec</span><span class="p">,</span> <span class="n">NeuralModelSpec</span><span class="p">],</span>
+                    <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains a model</span>
+<span class="sd">        </span>
+<span class="sd">        Trains a classical or neural model based on model_spec type passed in as an argument.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">           Union[ClassicalModelSpec, NeuralModelSpec]: The model_spec specifying requried parameters for specific model.</span>
+<span class="sd">           max_wait_time: optional, max wait time in seconds, if zero the call is treated as non-blocking.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; classical_model_spec = ClientUtils.classical_model_spec(name=&quot;catboost&quot;,</span>
+<span class="sd">                                                                description=&quot;train-a-classical-modal&quot;,</span>
+<span class="sd">                                                                project_id=project.id,</span>
+<span class="sd">                                                                training_dataset_id=train_ds.id,</span>
+<span class="sd">                                                                test_dataset_id=test_ds.id,</span>
+<span class="sd">                                                                algorithm=Classical.Algorithm.CAT_BOOST)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; result, model = client.train_model(classical_model_spec, max_wait_time=6000)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt; elif job.is_complete:</span>
+<span class="sd">            ...     result, model = client.get_classical_model(project.id, job.target_id)</span>
+<span class="sd">            ...     if result.is_failure:</span>
+<span class="sd">            ...         print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            &gt;&gt;&gt; else:</span>
+<span class="sd">            ...     print(&quot;Job did not complete..&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">ClassicalModelSpec</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_classical_model</span><span class="p">(</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">NeuralModelSpec</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_neural_model</span><span class="p">(</span><span class="n">model_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span>
+
+        <span class="n">error_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                             Unknown model spec type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">model_spec</span><span class="p">)</span><span class="si">}</span><span class="s2"> </span>
+<span class="s2">                             expecting type ClassicalModelSpec or NeuralModelSpec</span>
+<span class="s2">                             &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_job"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.get_job">[docs]</a>    <span class="k">def</span> <span class="nf">get_job</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves Job object</span>
+<span class="sd">        </span>
+<span class="sd">        Retrieves the Job object for a given job_id. The Job object is used to track jub&#39;s running-state.</span>
+<span class="sd">        The consumer may periodically check for status or poll the status until job completes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            job_id: id of the running Job.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero or if wait time expires.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; result, job = client.get_job(job_id)</span>
+<span class="sd">            &gt;&gt;&gt; while (not job.is_complete):</span>
+<span class="sd">            ...     result, job = client.get_job(job_id)</span>
+<span class="sd">            ...     if result.is_failure:</span>
+<span class="sd">            ...         print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ...         break</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_successful:</span>
+<span class="sd">            ...     print(&quot;Job successfully completed.&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_job_service</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.find_datasets"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.find_datasets">[docs]</a>    <span class="k">def</span> <span class="nf">find_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dataset</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of Datasets.</span>
+
+<span class="sd">        Retrieves a given list of Dataset objects.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project</span>
+<span class="sd">            dataset_names (List[str]): list of dataset names to be retrieved from the server.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List of Dataset: list of Dataset object</span>
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; dataset_names = [&quot;train_da&quot;, &quot;test_ds&quot;]</span>
+<span class="sd">            &gt;&gt;&gt; result, dataset_list = client.find_datasets(project.id, dataset_names)</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     ds_dict = ClientUtils.to_dataset_dict(dataset_list)</span>
+<span class="sd">            ...     train_set = ds_dict.get(&quot;train_ds&quot;)</span>
+<span class="sd">            ...     test_set = ds_dict.get(&quot;test_ds&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">find_datasets</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_names</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.find_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.find_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">find_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dataset</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a given Dataset.</span>
+
+<span class="sd">        Retrieves a given Dataset object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">            dataset_name (str):  name of the dataset.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Dataset: the requested dataset if one is found else None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">find_dataset</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.augment_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.augment_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">augment_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">augment_spec</span><span class="p">:</span> <span class="n">AugmentSpec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Augments given dataset</span>
+
+<span class="sd">        Augments a given dataset based on details provided in the AugmentSpec object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            augment_spec (AugmentSpec): information on type of augmentation.</span>
+<span class="sd">            max_wait_time: optional, max wait time in seconds, if zero call is treated as non-blocking.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; augment_spec = ClientUtils.augment_spec(augmented_dataset_name=&quot;aug_ds&quot;,</span>
+<span class="sd">                                                                project_id=project.id,</span>
+<span class="sd">                                                                dataset_id=train_ds.id,</span>
+<span class="sd">                                                                num_augments_per_example=1,</span>
+<span class="sd">                                                                keep_original_examples=True)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; result, job = client.augment_dataset(augment_spec, max_wait_time=6000)</span>
+<span class="sd">            &gt;&gt;&gt; target_ds_id = job.target_id</span>
+<span class="sd">            &gt;&gt;&gt; if result.is_failure:</span>
+<span class="sd">            ...     print(&quot;Error: {}&quot;.format(result.error_message))</span>
+<span class="sd">            ... else:</span>
+<span class="sd">            ...     print(&quot;Augmentation complete&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; if target_ds_id is not None:</span>
+<span class="sd">            ...     # the target_ds_id can be used to retrieve the augmented dataset</span>
+<span class="sd">            ...     # alternativly it can be downloaded to a CSV.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">augment_dataset</span><span class="p">(</span><span class="n">augment_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.find_dataset_ids"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.find_dataset_ids">[docs]</a>    <span class="k">def</span> <span class="nf">find_dataset_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a dataset_id by name.</span>
+
+<span class="sd">        Retrieves dataset_IDs by for requested datasets.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID for the project.</span>
+<span class="sd">            dataset_names (List[str]): List of datasets for which dataset_id is required.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            dict (Dict[str,str]): dictionary of name/value pairs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">find_dataset_ids</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_names</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.export_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.export_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">export_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                       <span class="n">dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                       <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                       <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">file_type</span><span class="p">:</span> <span class="n">DownloadFileType</span> <span class="o">=</span> <span class="n">DownloadFileType</span><span class="o">.</span><span class="n">CSV</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exports given dataset from Server.</span>
+
+<span class="sd">        Exports the given dataset from the Server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">            dataset_id (str): UUID of the dataset.</span>
+<span class="sd">            dir_name (str): name of directory to which the dataset is to be downloaded.</span>
+<span class="sd">            file_name (str): name of the file.</span>
+<span class="sd">            file_type (DownLoadFileType): the file format.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            path (str): path to where the file is downloaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">export_dataset</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">dataset_id</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.export_neural_model"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.export_neural_model">[docs]</a>    <span class="k">def</span> <span class="nf">export_neural_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                            <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                            <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exports given neural model</span>
+
+<span class="sd">        Exports a given neural model from the server to a consumer specified</span>
+<span class="sd">        path. The file extension is .pkl.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID for the project.</span>
+<span class="sd">            model_id (str): UUID for the model.</span>
+<span class="sd">            dir_name (str): path to where the model is downloaded.</span>
+<span class="sd">            file_name (str): name of the model</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            path (str): path to where the model is downloaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span><span class="o">.</span><span class="n">export_model</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">model_id</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_classical_models"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_classical_models">[docs]</a>    <span class="k">def</span> <span class="nf">list_classical_models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ClassicalModel</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of available classical models.</span>
+
+<span class="sd">        Retrieves a list of available classical models from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List[ClassicalModel]: list of completed classical models in the project.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classical_model_service</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.list_neural_models"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.list_neural_models">[docs]</a>    <span class="k">def</span> <span class="nf">list_neural_models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">NeuralModel</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a list of available neural models.</span>
+
+<span class="sd">        Retrieves a list of avalable neural models from the server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str):</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            List[NeuralModel]: list of completed neural models in the project.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neural_model_service</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">project_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.label_dataset_from_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.label_dataset_from_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">label_dataset_from_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label_dataset_spec</span><span class="p">:</span> <span class="n">LabelDatasetSpec</span><span class="p">,</span>
+                                    <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiates labeling of given dataset.</span>
+
+<span class="sd">        Initiates labeling of a given dataset by use of a Ensemble on the Server.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            label_dataset_spec (LabelDatasetSpec): </span>
+<span class="sd">            max_wait_time: optional, max wait time in seconds, if zero the call is treated as non-blocking.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">label_dataset</span><span class="p">(</span><span class="n">label_dataset_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.merge_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.merge_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">merge_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">merge_dataset_spec</span><span class="p">:</span> <span class="n">MergeSpec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merges two dataset</span>
+
+<span class="sd">        Merges two datasets to create a new, merged dataset. For columns to</span>
+<span class="sd">        merge the column names must be the same in both merge candidates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            merge_dataset_spec (MergeSpec):</span>
+<span class="sd">            max_wait_time: optional, max wait time in seconds, if zero the call is treated as non-blocking.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">merge_dataset</span><span class="p">(</span><span class="n">merge_dataset_spec</span><span class="o">=</span><span class="n">merge_dataset_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="o">=</span><span class="n">max_wait_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.export_ensemble"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.export_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">export_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">ensemble_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">dir_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                        <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exports given ensemble from the server.</span>
+
+<span class="sd">        Exports a given ensemble fromm the server to a user specified path.</span>
+<span class="sd">        This is a python pickel file that can be deployed for inference.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            project_id (str): UUID of the project.</span>
+<span class="sd">            ensemble_id (str): UUID of the ensemble to be exported.</span>
+<span class="sd">            dir_name (str): path to where the model is downloaded.</span>
+<span class="sd">            file_name (str): name of file.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            path (str): path to the dlowloaded file.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensemble_service</span><span class="o">.</span><span class="n">export_ensemble</span><span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">ensemble_id</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.copy_dataset"><a class="viewcode-back" href="../../index.html#jaxon_client.client.Client.copy_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_spec</span><span class="p">:</span> <span class="n">CopySpec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Result</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Job</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copies a given Dataset to a new Dataset.</span>
+
+<span class="sd">        A given dataset is copied to a new dataset - the schema applied to the</span>
+<span class="sd">        original is applied to the copy as is.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            copy_spec (CopySpec): provides name &amp; description for the new dataset.</span>
+<span class="sd">            max_wait_time: Optional, max wait time in seconds, if zero the</span>
+<span class="sd">            call is treated as non-blocking.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Result: result object carries the response status and an error-message in case of failure.</span>
+<span class="sd">            Job: used to monitor the job in case the max_wait_time is set to zero.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_service</span><span class="o">.</span><span class="n">copy_dataset</span><span class="p">(</span><span class="n">copy_dataset_spec</span><span class="o">=</span><span class="n">copy_spec</span><span class="p">,</span> <span class="n">max_wait_time</span><span class="o">=</span><span class="n">max_wait_time</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_is_valid_labels_source_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">labels_source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ClientUtils</span><span class="o">.</span><span class="n">is_list_of_str</span><span class="p">(</span><span class="n">labels_source</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_source</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Jaxon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
